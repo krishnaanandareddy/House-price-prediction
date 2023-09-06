@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+      ,
+      shrink-to-fit="no"
+    />
+    <!-- Bootstrap CSS-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <title>House Price Prediction</title>
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="card" style="width: 100%; height: 100%; margin-top: 50px">
+          <div class="card-header" style="text-align: center">
+            <h1>Welcome to House Price Predictor Random Forest Model</h1>
+          </div>
+          <div class="card-body">
+            <form method="post" accept-charset="utf-8">
+              <div class="row">
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Select the Location:</b></label>
+                  <select
+                    class="selectpicker form-control"
+                    id="location"
+                    name="location"
+                    required="1"
+                  >
+                    {% for location in locations %}
+                    <option value="{{ location }}">{{location}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Enter BHK:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="bhk"
+                    name="bhk"
+                    placeholder="Enter BHK"
+                  />
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Enter Number of Bathrooms:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="bath"
+                    name="bath"
+                    placeholder="Enter Number of Bathrooms"
+                  />
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Enter Square Feet:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="total_sqft"
+                    name="total_sqft"
+                    placeholder="Enter Square Feet"
+                  />
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Balcony:</b></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="balcony"
+                    name="balcony"
+                    placeholder="Enter balcony"
+                  />
+                </div>
+                <div class="col-md-6 form-group" style="text-align: center">
+                  <label><b>Select the area_type:</b></label>
+                  <select
+                    class="selectpicker form-control"
+                    id="area_type"
+                    name="area_type"
+                    required="1"
+                  >
+                    {% for area_type in area_types %}
+                    <option value="{{ area_type }}">{{area_type}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div
+                  class="col-md-6 form-group"
+                  style="text-align: center; margin-bottom: 20px"
+                >
+                  <label><b>Select the availability:</b></label>
+                  <select
+                    class="selectpicker form-control"
+                    id="availability"
+                    name="availability"
+                    required="1"
+                  >
+                    {% for availability in availabilitys %}
+                    <option value="{{ availability }}">{{availability}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <br />
+                <br />
+                <div class="col-md-12 form-group">
+                  <button
+                    class="btn btn-primary form-control"
+                    onclick="send_data()"
+                  >
+                    Predict Price
+                  </button>
+                </div>
+              </div>
+            </form>
+            <br />
+            <div class="col-md-12" style="text-align: center">
+              <h3><span id="prediction"></span></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function form_handler(event) {
+        event.preventDefault(); // Don't submit the form Normally
+      }
+
+      function send_data() {
+        document.querySelector("form").addEventListener("submit", form_handler);
+        var fd = new FormData(document.querySelector("form"));
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/predict", true);
+        document.getElementById("prediction").innerHTML =
+          "Wait Predicting price!...";
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+            document.getElementById("prediction").innerHTML =
+              "Predicted price by random forest model is: " + xhr.responseText;
+          }
+        };
+        xhr.onload = function () {};
+        xhr.send(fd);
+      }
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+      integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+      integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
